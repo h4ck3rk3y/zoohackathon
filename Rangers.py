@@ -4,7 +4,7 @@ import csv
 
 class Rangers:
 
-	def __init__(self, rangersFile="Rangers.csv"):
+	def __init__(self, rangersFile="Rangers.csv.bk"):
 		self.rangersFile = rangersFile
 		self.rangers = defaultdict(list)
 		self.rangerPos = []

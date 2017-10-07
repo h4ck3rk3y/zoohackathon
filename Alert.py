@@ -23,10 +23,10 @@ class Alert:
 			lat, lon = utm.to_latlon(northing, easting, zoneNumber, zoneChar)
 			return (lat, lon)
 		else:
-			p = re.compile("\d+°\d+")
+			p = re.compile("\d+\.\d+")
 			matches = re.findall(p, location)
-			lat = -float(matches[0].replace("°", "."))
-			lon = float(matches[1].replace("°", "."))
+			lat = -float(matches[0])
+			lon = float(matches[1])
 			return (lat, lon)
 
 	def isHighLevelAlert(self):

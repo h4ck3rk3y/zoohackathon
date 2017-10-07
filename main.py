@@ -5,7 +5,7 @@ from LogProcessor import LogProcessor
 
 def main():
 	logProcessor = LogProcessor()
-	logProcessor.process()
+	logProcessor.processDB()
 
 
 if __name__ =="__main__":
