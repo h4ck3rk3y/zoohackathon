@@ -3,12 +3,14 @@ import time
 
 from Alert import Alert
 from TwilioClient import TwilioClient
+from Rangers import Rangers
 
 class LogProcessor:
 
     def __init__(self, alerts="Alerts.csv"):
         self.alerts = alerts
         self.client = TwilioClient()
+        self.rangers = Rangers()
 
     def follow(self, alertsFle):
         alertsFle.seek(0,2)
@@ -22,11 +24,12 @@ class LogProcessor:
     def processLine(self, line):
         sensor, sensor_id, time_reported, date_reported, location, label = line.split(',')
         alert = Alert(sensor, sensor_id, time_reported, date_reported, location, label)
+        whoToCall = self.rangers.whoToCall(alert.location)['number']
 
         if alert.isHighLevelAlert():
-            self.client.makeCall(alert.ranger())
+            self.client.makeCall(whoToCall)
         else:
-            self.client.sendMessage(alert.ranger(), alert.message())
+            self.client.sendMessage(whoToCall, alert.message())
 
     def processContinously(self):
         with open(self.alerts, 'rb') as alertsFile:
