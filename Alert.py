@@ -16,7 +16,7 @@ class Alert:
 		return False
 
 	def message(self):
-		return "%s %s %s:%s at %s with label %s"%(self.sensor, self.sensor_id, self.date_reported, self.time_reported, self.location, self.label)
+		return "%s-%s %s-%s at %s with label %s"%(self.sensor, self.sensor_id, self.date_reported, self.time_reported, self.location, self.label)
 
 	def ranger(self):
 		return "+447526704419"
