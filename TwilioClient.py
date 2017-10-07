@@ -10,3 +10,6 @@ class TwilioClient:
 
 	def sendMessage(self, receiver, message):
 		message = self.client.messages.create(self.from_number, body=message, to=receiver)
+
+	def makeCall(self, receiver):
+		self.client.calls.create(to=receiver, from_=self.from_number, url="http://demo.twilio.com/docs/voice.xml")

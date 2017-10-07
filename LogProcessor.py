@@ -22,7 +22,11 @@ class LogProcessor:
     def processLine(self, line):
         sensor, sensor_id, time_reported, date_reported, location, label = line.split(',')
         alert = Alert(sensor, sensor_id, time_reported, date_reported, location, label)
-        self.client.sendMessage(alert.ranger(), alert.message())
+
+        if alert.isHighLevelAlert():
+            self.client.makeCall(alert.ranger())
+        else:
+            self.client.sendMessage(alert.ranger(), alert.message())
 
     def processContinously(self):
         with open(self.alerts, 'rb') as alertsFile:
