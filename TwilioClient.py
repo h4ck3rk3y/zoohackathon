@@ -12,4 +12,4 @@ class TwilioClient:
 		message = self.client.messages.create(self.from_number, body=message, to=receiver)
 
 	def makeCall(self, receiver):
-		self.client.calls.create(to=receiver, from_=self.from_number, url="http://demo.twilio.com/docs/voice.xml")
+		self.client.calls.create(to=receiver, from_=self.from_number, url="https://gyani.net/data/zone1.xml", method="GET")
