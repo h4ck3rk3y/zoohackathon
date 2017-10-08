@@ -1,5 +1,5 @@
 from twilio.rest import TwilioRestClient
-from keys import *
+from keys import FROM_NUMBER, AUTH_SID, AUTH_TOKEN
 
 
 class TwilioClient:

@@ -34,7 +34,7 @@ class Rangers:
 		cur = get_db().execute(query, [])
 		rangersDB = cur.fetchall()
 		rangers = defaultdict(list)
-		for ranger in rangersDB:
+		for row in rangersDB:
 			rangers[(float(row[0]), float(row[1]))].append({'name': row[2], 'number': row[3]})
 		if rangers:
 			pos = rangers.keys()

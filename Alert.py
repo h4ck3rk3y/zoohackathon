@@ -30,9 +30,14 @@ class Alert:
 			return (lat, lon)
 
 	def isHighLevelAlert(self):
+		if "armed".lower() in self.label.lower():
+			return True
+		return False
+
+	def isMediumLevelAlert(self):
 		if "intruder".lower() in self.label.lower():
 			return True
 		return False
 
 	def message(self):
-		return "%s-%s %s-%s at %s with label %s"%(self.sensor, self.sensor_id, self.date_reported, self.time_reported, self.location, self.label)
+		return "%s-%s %s-%s at %s %s"%(self.sensor, self.sensor_id, self.date_reported, self.time_reported, self.location, self.label)

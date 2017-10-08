@@ -1,4 +1,3 @@
-import csv
 import time
 
 import sqlite3
@@ -6,6 +5,7 @@ import sqlite3
 from Alert import Alert
 from TwilioClient import TwilioClient
 from Rangers import Rangers
+from Config import Config
 
 def get_db():
     db = sqlite3.connect('database.db', timeout=10)
@@ -31,13 +31,35 @@ class LogProcessor:
             yield line
 
     def processLine(self, line):
+        config = Config()
         sensor, sensor_id, time_reported, date_reported, location, label = line.split(',')
         alert = Alert(sensor, sensor_id, time_reported, date_reported, location, label)
         whoToCall = self.rangers.whoToCallDB(alert.location)['number']
-        if alert.isHighLevelAlert():
-            self.client.makeCall(whoToCall)
+
+        if config.notify():
+            if alert.isHighLevelAlert():
+                print "[HIGH]%s"%(alert.message())
+                if config.isP1SMSEnabled():
+                    self.client.sendMessage(whoToCall, alert.message())
+                if config.isP1VoipEnabled():
+                    self.client.makeCall(whoToCall)
+            elif alert.isMediumLevelAlert():
+                print "[MEDIUM]%s"%(alert.message())
+                if config.isP2SMSEnabled():
+                    self.client.sendMessage(whoToCall, alert.message())
+                if config.isP2VoipEnabled():
+                    self.client.makeCall(whoToCall)
+            else:
+                print "[LOW]%s"%(alert.message())
+                if config.isP3SMSEnabled():
+                    self.client.sendMessage(whoToCall, alert.message())
+                if config.isP3VoipEnabled():
+                    self.client.makeCall(whoToCall)
         else:
-            self.client.sendMessage(whoToCall, alert.message())
+            print "----"
+            print alert.message()
+            print whoToCall
+            print "----"
 
     def processContinously(self):
         with open(self.alerts, 'rb') as alertsFile:
@@ -57,7 +79,6 @@ class LogProcessor:
         logs = cur.fetchall()
         queries = []
         for log in logs:
-            print log
             queries.append("update logs set status=1 where rowid=%s;"%(log[0]))
             log = [clean(x) if x else "" for x in log[1:-1]]
             logLine = ','.join(log).replace('"','')
