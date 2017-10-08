@@ -9,7 +9,9 @@ class TwilioClient:
 		self.from_number = from_number
 
 	def sendMessage(self, receiver, message):
+		print "Sending message to %s"%(receiver)
 		message = self.client.messages.create(self.from_number, body=message, to=receiver)
 
 	def makeCall(self, receiver):
+		print "Make Call to %s"%(receiver)
 		self.client.calls.create(to=receiver, from_=self.from_number, url="https://gyani.net/data/zone1.xml", method="GET")
