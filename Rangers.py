@@ -9,7 +9,7 @@ def get_db():
 
 class Rangers:
 
-	def __init__(self, rangersFile="Rangers.csv.bk"):
+	def __init__(self, rangersFile="Rangers.csv"):
 		self.rangersFile = rangersFile
 		self.rangers = defaultdict(list)
 		self.rangerPos = []
@@ -32,12 +32,15 @@ class Rangers:
 	def whoToCallDB(self, alerLoc):
 		query = "select * from rangers"
 		cur = get_db().execute(query, [])
-		rangers = cur.fetchall()
+		rangersDB = cur.fetchall()
 		rangers = defaultdict(list)
-		for ranger in rangers:
+		for ranger in rangersDB:
 			rangers[(float(row[0]), float(row[1]))].append({'name': row[2], 'number': row[3]})
-		pos = rangers.keys()
-		kdtree = spatial.kdtree(pos)
-		distance, index = kdtree.query(alerLoc)
-		pair = pos[index]
-		return rangers[pair][0]
+		if rangers:
+			pos = rangers.keys()
+			kdtree = spatial.KDTree(pos)
+			distance, index = kdtree.query(alerLoc)
+			pair = pos[index]
+			return rangers[pair][0]
+		else:
+			return self.whoToCall(alerLoc)

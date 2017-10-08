@@ -33,7 +33,7 @@ class LogProcessor:
     def processLine(self, line):
         sensor, sensor_id, time_reported, date_reported, location, label = line.split(',')
         alert = Alert(sensor, sensor_id, time_reported, date_reported, location, label)
-        whoToCall = self.rangers.whoToCall(alert.location)['number']
+        whoToCall = self.rangers.whoToCallDB(alert.location)['number']
         if alert.isHighLevelAlert():
             self.client.makeCall(whoToCall)
         else:
